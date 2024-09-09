@@ -13,8 +13,6 @@ Application Template.
 #ifndef _Application_
 #define _Application_
 /* _____PROJECT INCLUDES____________________________________________________ */
-
-// #include "Arduino.h"
 #include <stdio.h>
 #include "pico/stdlib.h"
 /* _____GLOBAL VARIABLES_____________________________________________________ */
