@@ -109,7 +109,7 @@ int main()
     printf("Loaded program at %d\n", offset);
     
     #ifdef PICO_DEFAULT_LED_PIN
-    blink_pin_forever(pio, 0, offset, PICO_DEFAULT_LED_PIN, 3);
+    // blink_pin_forever(pio, 0, offset, PICO_DEFAULT_LED_PIN, 3);
     #else
     blink_pin_forever(pio, 0, offset, 6, 3);
     #endif
@@ -135,7 +135,6 @@ int main()
     printf("System Clock Frequency is %d Hz\n", clock_get_hz(clk_sys));
     printf("USB Clock Frequency is %d Hz\n", clock_get_hz(clk_usb));
     // For more examples of clocks use see https://github.com/raspberrypi/pico-examples/tree/master/clocks
-    //tétùdhsìuhsoahodfòidọi
     atApp_ABC.Debug();
     while (true) {
         atApp_ABC.Run_Application(APP_RUN_MODE_AUTO);
