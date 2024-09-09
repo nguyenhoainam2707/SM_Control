@@ -8,7 +8,13 @@
 #include "hardware/timer.h"
 #include "hardware/watchdog.h"
 #include "hardware/clocks.h"
+// freertos
+#include "pico/stdlib.h"
+#include "pico/multicore.h"
 
+// Application includes
+#include "App.h"
+#include "atApp_ABC.h"
 // UART defines
 // By default the stdout UART is `uart0`, so we will use the second one
 #define UART_ID uart1
@@ -130,9 +136,10 @@ int main()
     printf("USB Clock Frequency is %d Hz\n", clock_get_hz(clk_usb));
     // For more examples of clocks use see https://github.com/raspberrypi/pico-examples/tree/master/clocks
 
+    atApp_ABC.Debug();
     while (true) {
-        printf("Hello, world!\n");
-         watchdog_update();
+        atApp_ABC.Run_Application(APP_RUN_MODE_AUTO);
+        watchdog_update();
         sleep_ms(1000);
     }
 }
