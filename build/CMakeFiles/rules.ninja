@@ -83,7 +83,7 @@ rule ASM_EXECUTABLE_LINKER__bs2_default_Debug
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = "C:\Users\a c e r\.pico-sdk\cmake\v3.28.6\bin\cmake.exe" --regenerate-during-build -SC:\Pico\atSampling_Device\atSampling_Device -BC:\Pico\atSampling_Device\atSampling_Device\build
+  command = "C:\Users\a c e r\.pico-sdk\cmake\v3.28.6\bin\cmake.exe" --regenerate-during-build -SD:\Github\SM_Control -BD:\Github\SM_Control\build
   description = Re-running CMake...
   generator = 1
 

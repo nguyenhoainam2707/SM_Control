@@ -1,4 +1,4 @@
-# Install script for directory: C:/Pico/atSampling_Device/atSampling_Device
+# Install script for directory: D:/Github/SM_Control
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,7 +39,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("C:/Pico/atSampling_Device/atSampling_Device/build/pico-sdk/cmake_install.cmake")
+  include("D:/Github/SM_Control/build/pico-sdk/cmake_install.cmake")
 
 endif()
 
@@ -51,5 +51,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Pico/atSampling_Device/atSampling_Device/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "D:/Github/SM_Control/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
