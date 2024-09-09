@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/ADMIN/.pico-sdk/sdk/2.0.0
+# Install script for directory: C:/Users/a c e r/.pico-sdk/sdk/2.0.0
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,21 +34,21 @@ endif()
 
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "C:/Users/ADMIN/.pico-sdk/toolchain/13_2_Rel1/bin/arm-none-eabi-objdump.exe")
+  set(CMAKE_OBJDUMP "C:/Users/a c e r/.pico-sdk/toolchain/13_2_Rel1/bin/arm-none-eabi-objdump.exe")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/ADMIN/Documents/GitHub/atSampling_Device/build/pico-sdk/tools/cmake_install.cmake")
+  include("C:/Pico/atSampling_Device/atSampling_Device/build/pico-sdk/tools/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/ADMIN/Documents/GitHub/atSampling_Device/build/pico-sdk/src/cmake_install.cmake")
+  include("C:/Pico/atSampling_Device/atSampling_Device/build/pico-sdk/src/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/ADMIN/Documents/GitHub/atSampling_Device/build/pico-sdk/docs/cmake_install.cmake")
+  include("C:/Pico/atSampling_Device/atSampling_Device/build/pico-sdk/docs/cmake_install.cmake")
 endif()
 
