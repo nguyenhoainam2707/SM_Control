@@ -16,7 +16,7 @@
 #define _Application_atApp_ABC_
 /* _____PROJECT INCLUDES____________________________________________________ */
 #include "App.h"
-
+#include "services/atService_XYZ.h"
 /* _____DEFINITIONS__________________________________________________________ */
 
 /* _____GLOBAL VARIABLES_____________________________________________________ */
@@ -76,7 +76,7 @@ App_ABC::~App_ABC()
  */
 void  App_ABC::App_ABC_Pend()
 {
-    // atService_XYZ.Debug();
+    atService_XYZ.Debug();
 }
 /**
  * This start function will init some critical function 
@@ -84,7 +84,7 @@ void  App_ABC::App_ABC_Pend()
 void  App_ABC::App_ABC_Start()
 {
 	// init atXYZ Service in the fist running time
-	// atService_XYZ.Run_Service();
+	atService_XYZ.Run_Service();
 }  
 /**
  * Restart function of SNM  app
@@ -98,7 +98,7 @@ void  App_ABC::App_ABC_Restart()
  */
 void  App_ABC::App_ABC_Execute()
 {	
-	// atService_XYZ.Run_Service();
+	atService_XYZ.Run_Service();
     if(atApp_ABC.User_Mode == APP_USER_MODE_DEBUG)
     {
 		

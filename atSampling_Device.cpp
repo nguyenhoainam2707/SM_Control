@@ -13,8 +13,8 @@
 #include "pico/multicore.h"
 
 // Application includes
-#include "App.h"
-#include "atApp_ABC.h"
+#include "apps/App.h"
+#include "apps/atApp_ABC.h"
 // UART defines
 // By default the stdout UART is `uart0`, so we will use the second one
 #define UART_ID uart1
