@@ -80,7 +80,7 @@ App_TMC2208::~App_TMC2208()
  */
 void  App_TMC2208::App_TMC2208_Pend()
 {
-    atService_XYZ.Debug();
+    atTMC2208.Debug();
 }
 /**
  * This start function will init some critical function 
@@ -88,7 +88,7 @@ void  App_TMC2208::App_TMC2208_Pend()
 void  App_TMC2208::App_TMC2208_Start()
 {
 	// init atXYZ Service in the fist running time
-	atService_XYZ.Run_Service();
+	atTMC2208.Run_Service();
 }  
 /**
  * Restart function of SNM  app
@@ -102,7 +102,7 @@ void  App_TMC2208::App_TMC2208_Restart()
  */
 void  App_TMC2208::App_TMC2208_Execute()
 {	
-	atService_XYZ.Run_Service();
+	atTMC2208.Run_Service();
     if(atApp_TMC2208.User_Mode == APP_USER_MODE_DEBUG)
     {
 		
