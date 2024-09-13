@@ -37,3 +37,8 @@ if(NOT DEFINED CMAKE_OBJDUMP)
   set(CMAKE_OBJDUMP "C:/Users/a c e r/.pico-sdk/toolchain/13_2_Rel1/bin/arm-none-eabi-objdump.exe")
 endif()
 
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("D:/Github/SM_Control/build/pico-sdk/src/rp2_common/pico_lwip/tools/cmake_install.cmake")
+endif()
+
