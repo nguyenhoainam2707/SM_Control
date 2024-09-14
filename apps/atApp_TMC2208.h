@@ -46,7 +46,7 @@ private:
 	static void  App_TMC2208_Restart();
 	static void  App_TMC2208_Execute();
 	static void  App_TMC2208_Suspend();
-	static void  App_TMC2208_Resume();	  
+	static void  App_TMC2208_Resume();
 	static void  App_TMC2208_End();
 } atApp_TMC2208 ;
 /**

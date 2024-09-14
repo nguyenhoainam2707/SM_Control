@@ -48,7 +48,7 @@ TMC2208::TMC2208(/* args */)
     // change the ID of Service
     ID_Service = 1;
     // change the Service name
-    Name_Service = (char*)"XYZ Service";
+    Name_Service = (char*)"TMC2208 Service";
     // change the ID of SNM
 }
 /**
@@ -70,7 +70,9 @@ void  TMC2208::TMC2208_Start()
  * Execute fuction of SNM app
  */
 void  TMC2208::TMC2208_Execute()
-{   
+{
+    printf("Hello world!\n");
+    // sleep_ms(500); 
     if(atTMC2208.User_Mode == SER_USER_MODE_DEBUG)
     {
         
