@@ -99,10 +99,10 @@ void  App_ABC::App_ABC_Restart()
 void  App_ABC::App_ABC_Execute()
 {	
 	atService_XYZ.Run_Service();
-    if(atApp_ABC.User_Mode == APP_USER_MODE_DEBUG)
-    {
+    // if(atApp_ABC.User_Mode == APP_USER_MODE_DEBUG)
+    // {
 		
-    }   
+    // }
 }
 void  App_ABC::App_ABC_Suspend(){}
 void  App_ABC::App_ABC_Resume(){}	  

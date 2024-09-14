@@ -1,4 +1,4 @@
-// Padded and checksummed version of: C:/Pico/atSampling_Device/atSampling_Device/build/pico-sdk/src/rp2040/boot_stage2/bs2_default.bin
+// Padded and checksummed version of: D:/Github/SM_Control/build/pico-sdk/src/rp2040/boot_stage2/bs2_default.bin
 
 .cpu cortex-m0plus
 .thumb

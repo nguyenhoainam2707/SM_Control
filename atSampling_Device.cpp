@@ -14,7 +14,9 @@
 
 // Application includes
 #include "apps/App.h"
-#include "apps/atApp_ABC.h"
+// #include "apps/atApp_ABC.h"
+#include "apps/atApp_TMC2208.h"
+
 // UART defines
 // By default the stdout UART is `uart0`, so we will use the second one
 #define UART_ID uart1
@@ -109,7 +111,7 @@ int main()
     printf("Loaded program at %d\n", offset);
     
     #ifdef PICO_DEFAULT_LED_PIN
-    blink_pin_forever(pio, 0, offset, PICO_DEFAULT_LED_PIN, 3);
+    blink_pin_forever(pio, 0, offset, PICO_DEFAULT_LED_PIN, 1);
     #else
     blink_pin_forever(pio, 0, offset, 6, 3);
     #endif
@@ -135,10 +137,9 @@ int main()
     printf("System Clock Frequency is %d Hz\n", clock_get_hz(clk_sys));
     printf("USB Clock Frequency is %d Hz\n", clock_get_hz(clk_usb));
     // For more examples of clocks use see https://github.com/raspberrypi/pico-examples/tree/master/clocks
-
-    atApp_ABC.Debug();
+    atApp_TMC2208.Debug();
     while (true) {
-        atApp_ABC.Run_Application(APP_RUN_MODE_AUTO);
+        atApp_TMC2208.Run_Application(APP_RUN_MODE_AUTO);
         watchdog_update();
         sleep_ms(1000);
     }
