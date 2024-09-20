@@ -16,8 +16,20 @@
 #define _Application_atApp_TMC2208_
 /* _____PROJECT INCLUDES____________________________________________________ */
 #include "App.h"
-#include "services/TMC2208.h"
+#include "hardware/pwm.h"
+// #include "services/TMC2208.h"
 /* _____DEFINITIONS__________________________________________________________ */
+#define PIN_SM1_EN 6
+#define PIN_SM1_DIR 7
+#define PIN_SM1_STEP 8
+#define PIN_SM1_MS1 9
+#define PIN_SM1_MS2 10
+
+#define PIN_SM2_EN 11
+#define PIN_SM2_DIR 12
+#define PIN_SM2_STEP 13
+#define PIN_SM2_MS1 14
+#define PIN_SM2_MS2 15
 
 /* _____GLOBAL VARIABLES_____________________________________________________ */
 // TaskHandle_t Task_atApp_TMC2208;  
@@ -80,7 +92,7 @@ App_TMC2208::~App_TMC2208()
  */
 void  App_TMC2208::App_TMC2208_Pend()
 {
-    atTMC2208.Debug();
+    // atTMC2208.Debug();
 }
 /**
  * This start function will init some critical function 
@@ -88,7 +100,7 @@ void  App_TMC2208::App_TMC2208_Pend()
 void  App_TMC2208::App_TMC2208_Start()
 {
 	// init atXYZ Service in the fist running time
-	atTMC2208.Run_Service();
+	// atTMC2208.Run_Service();
 }  
 /**
  * Restart function of SNM  app
@@ -102,7 +114,8 @@ void  App_TMC2208::App_TMC2208_Restart()
  */
 void  App_TMC2208::App_TMC2208_Execute()
 {	
-	atTMC2208.Run_Service();
+	// atTMC2208.Run_Service();
+	// printf("Hello\n");
     if(atApp_TMC2208.User_Mode == APP_USER_MODE_DEBUG)
     {
 		
