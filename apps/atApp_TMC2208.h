@@ -5,7 +5,7 @@
 /*
   Application example t
 
-  Library:: 
+  Library::
 
   This version is
 
@@ -17,6 +17,7 @@
 /* _____PROJECT INCLUDES____________________________________________________ */
 #include "App.h"
 #include "hardware/pwm.h"
+#include <cmath>
 // #include "services/TMC2208.h"
 /* _____DEFINITIONS__________________________________________________________ */
 #define PIN_SM1_EN 6
@@ -31,8 +32,20 @@
 #define PIN_SM2_MS1 14
 #define PIN_SM2_MS2 15
 
+enum SM1_State
+{
+	SM1_STOP,
+	SM1_RUN_FOREVER,
+	SM1_RUN_ANGLE
+};
+enum SM2_State
+{
+	SM2_STOP,
+	SM2_RUN_FOREVER,
+	SM2_RUN_ANGLE
+};
 /* _____GLOBAL VARIABLES_____________________________________________________ */
-// TaskHandle_t Task_atApp_TMC2208;  
+// TaskHandle_t Task_atApp_TMC2208;
 void atApp_TMC2208_Task_Func(void *parameter);
 ///////////////////////////////////////////////Testing part//
 /* _____GLOBAL FUNCTION______________________________________________________ */
@@ -40,44 +53,69 @@ void atApp_TMC2208_Task_Func(void *parameter);
 /* _____CLASS DEFINITION_____________________________________________________ */
 
 /**
- * This Application class is the application to manage the 
+ * This Application class is the application to manage the
  */
 class App_TMC2208 : public Application
 {
 public:
-  	App_TMC2208();
- 	~App_TMC2208();
-	float m1_speed = 0;
-	float m2_speed = 0;
-	bool m1_run = false;
-	bool m2_run = false;
+	App_TMC2208();
+	~App_TMC2208();
+	static bool sm1_en;
+	static bool sm1_dir;
+	static float sm1_speed;
+	static unsigned char sm1_resolution;
+	static unsigned char sm1_div_int;
+	static float sm1_angle;
+
+	static bool sm2_en;
+	static bool sm2_dir;
+	static float sm2_speed;
+	static unsigned char sm2_resolution;
+	static unsigned char sm2_div_int;
+	static float sm2_angle;
+
 protected:
 private:
-  	static void  App_TMC2208_Pend();
-	static void  App_TMC2208_Start();
-	static void  App_TMC2208_Restart();
-	static void  App_TMC2208_Execute();
-	static void  App_TMC2208_Suspend();
-	static void  App_TMC2208_Resume();
-	static void  App_TMC2208_End();
-} atApp_TMC2208 ;
+	static void App_TMC2208_Pend();
+	static void App_TMC2208_Start();
+	static void App_TMC2208_Restart();
+	static void App_TMC2208_Execute();
+	static void App_TMC2208_Suspend();
+	static void App_TMC2208_Resume();
+	static void App_TMC2208_End();
+} atApp_TMC2208;
 /**
  * This function will be automaticaly called when a object is created by this class
  */
+
+bool sm1_en = true;
+bool sm1_dir = false;
+float sm1_speed = 0;
+unsigned char sm1_resolution = 16;
+unsigned char sm1_div_int = 32;
+float sm1_angle = 0;
+
+bool sm2_en = true;
+bool sm2_dir = false;
+float sm2_speed = 0;
+unsigned char sm2_resolution = 16;
+unsigned char sm2_div_int = 32;
+float sm2_angle = 0;
+
 App_TMC2208::App_TMC2208(/* args */)
 {
-  	_Pend_User 	     = *App_TMC2208_Pend;
-	_Start_User 	 = *App_TMC2208_Start;
-	_Restart_User 	 = *App_TMC2208_Restart;
-	_Execute_User 	 = *App_TMC2208_Execute;
-	_Suspend_User	 = *App_TMC2208_Suspend;
-	_Resume_User	 = *App_TMC2208_Resume;
-	_End_User	     = *App_TMC2208_End;
+	_Pend_User = *App_TMC2208_Pend;
+	_Start_User = *App_TMC2208_Start;
+	_Restart_User = *App_TMC2208_Restart;
+	_Execute_User = *App_TMC2208_Execute;
+	_Suspend_User = *App_TMC2208_Suspend;
+	_Resume_User = *App_TMC2208_Resume;
+	_End_User = *App_TMC2208_End;
 
 	// change the ID of application
 	ID_Application = 1;
 	// change the application name
-	Name_Application = (char*)"TMC2208 Application";
+	Name_Application = (char *)"TMC2208 Application";
 	// change the ID of SNM
 }
 /**
@@ -85,45 +123,80 @@ App_TMC2208::App_TMC2208(/* args */)
  */
 App_TMC2208::~App_TMC2208()
 {
-	
 }
 /**
  * Pend to start is the first task of this application it will do prerequisite condition. In the debit mode, task will send information of application to terminal to start the application.
  */
-void  App_TMC2208::App_TMC2208_Pend()
+void App_TMC2208::App_TMC2208_Pend()
 {
-    // atTMC2208.Debug();
+	// atTMC2208.Debug();
 }
 /**
- * This start function will init some critical function 
+ * This start function will init some critical function
  */
-void  App_TMC2208::App_TMC2208_Start()
+void App_TMC2208::App_TMC2208_Start()
 {
+	gpio_set_function(PIN_SM1_STEP, GPIO_FUNC_PWM);
+	gpio_set_function(PIN_SM2_STEP, GPIO_FUNC_PWM);
+
+	uint8_t sm1_slice_num = pwm_gpio_to_slice_num(PIN_SM1_STEP);
+	uint8_t sm2_slice_num = pwm_gpio_to_slice_num(PIN_SM2_STEP);
+
+	gpio_init(PIN_SM1_EN);
+	gpio_init(PIN_SM1_DIR);
+	gpio_init(PIN_SM1_MS1);
+	gpio_init(PIN_SM1_MS2);
+
+	gpio_init(PIN_SM2_EN);
+	gpio_init(PIN_SM2_DIR);
+	gpio_init(PIN_SM2_MS1);
+	gpio_init(PIN_SM2_MS2);
+
+	gpio_set_dir(PIN_SM1_EN, GPIO_OUT);
+	gpio_set_dir(PIN_SM1_DIR, GPIO_OUT);
+	gpio_set_dir(PIN_SM1_MS1, GPIO_OUT);
+	gpio_set_dir(PIN_SM1_MS2, GPIO_OUT);
+
+	gpio_set_dir(PIN_SM2_EN, GPIO_OUT);
+	gpio_set_dir(PIN_SM2_DIR, GPIO_OUT);
+	gpio_set_dir(PIN_SM2_MS1, GPIO_OUT);
+	gpio_set_dir(PIN_SM2_MS2, GPIO_OUT);
+
+	if (sm1_speed > 0)
+	{
+		double sm1_top_tmp = (125000000ULL * 60) / (sm1_speed * 200 * sm1_resolution * sm1_div_int) - 1;
+		if (sm1_top_tmp <= 65535)
+		{
+			int sm1_top = round(sm1_top_tmp);
+			pwm_set_wrap(sm1_slice_num, sm1_top);
+    		pwm_set_chan_level(sm1_slice_num, PWM_CHAN_A, floor(0.5*sm1_top));
+   			pwm_set_enabled(sm1_top, true); 
+		}
+	}
+	
 	// init atXYZ Service in the fist running time
 	// atTMC2208.Run_Service();
-}  
+}
 /**
  * Restart function of SNM  app
  */
-void  App_TMC2208::App_TMC2208_Restart()
+void App_TMC2208::App_TMC2208_Restart()
 {
-
 }
 /**
  * Execute fuction of SNM app
  */
-void  App_TMC2208::App_TMC2208_Execute()
-{	
+void App_TMC2208::App_TMC2208_Execute()
+{
 	// atTMC2208.Run_Service();
 	// printf("Hello\n");
-    if(atApp_TMC2208.User_Mode == APP_USER_MODE_DEBUG)
-    {
-		
-    }   
+	if (atApp_TMC2208.User_Mode == APP_USER_MODE_DEBUG)
+	{
+	}
 }
-void  App_TMC2208::App_TMC2208_Suspend(){}
-void  App_TMC2208::App_TMC2208_Resume(){}	  
-void  App_TMC2208::App_TMC2208_End(){}
+void App_TMC2208::App_TMC2208_Suspend() {}
+void App_TMC2208::App_TMC2208_Resume() {}
+void App_TMC2208::App_TMC2208_End() {}
 // void atApp_TMC2208_Task_Func(void *parameter)
 // {
 //   while (1)
