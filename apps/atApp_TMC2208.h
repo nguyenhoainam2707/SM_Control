@@ -88,19 +88,20 @@ private:
  * This function will be automaticaly called when a object is created by this class
  */
 
-bool sm1_en = true;
-bool sm1_dir = false;
-float sm1_speed = 0;
-unsigned char sm1_resolution = 16;
-unsigned char sm1_div_int = 32;
-float sm1_angle = 0;
+bool App_TMC2208::sm1_en = true;
+bool App_TMC2208::sm1_dir = false;
+float App_TMC2208::sm1_speed = 0;
+unsigned char App_TMC2208::sm1_resolution = 16;
+unsigned char App_TMC2208::sm1_div_int = 32;
+float App_TMC2208::sm1_angle = 0;
 
-bool sm2_en = true;
-bool sm2_dir = false;
-float sm2_speed = 0;
-unsigned char sm2_resolution = 16;
-unsigned char sm2_div_int = 32;
-float sm2_angle = 0;
+bool App_TMC2208::sm2_en = true;
+bool App_TMC2208::sm2_dir = false;
+float App_TMC2208::sm2_speed = 0;
+unsigned char App_TMC2208::sm2_resolution = 16;
+unsigned char App_TMC2208::sm2_div_int = 32;
+float App_TMC2208::sm2_angle = 0;
+
 
 App_TMC2208::App_TMC2208(/* args */)
 {
@@ -162,18 +163,45 @@ void App_TMC2208::App_TMC2208_Start()
 	gpio_set_dir(PIN_SM2_MS1, GPIO_OUT);
 	gpio_set_dir(PIN_SM2_MS2, GPIO_OUT);
 
+	gpio_put(PIN_SM1_EN, false);
+
+	switch (sm1_resolution) {
+      case 2:
+        gpio_put(PIN_SM1_MS1, true);
+        gpio_put(PIN_SM1_MS2, false);
+        break;
+      case 4:
+        gpio_put(PIN_SM1_MS1, false);
+        gpio_put(PIN_SM1_MS2, true);
+        break;
+      case 8:
+        gpio_put(PIN_SM1_MS1, false);
+        gpio_put(PIN_SM1_MS2, false);
+        break;
+      case 16:
+        gpio_put(PIN_SM1_MS1, true);
+        gpio_put(PIN_SM1_MS2, true);
+        break;
+      default:;
+	}
+
+	pwm_set_clkdiv(sm1_slice_num, sm1_div_int);
+
 	if (sm1_speed > 0)
 	{
-		double sm1_top_tmp = (125000000ULL * 60) / (sm1_speed * 200 * sm1_resolution * sm1_div_int) - 1;
+		float sm1_top_tmp =  37500000/sm1_speed/sm1_resolution/sm1_div_int - 1;
+		// uint16_t frequency = 3000;//Hz
+		// uint16_t period = 125000000/32/frequency;
+		// printf("%f",sm1_top_tmp);
 		if (sm1_top_tmp <= 65535)
 		{
 			int sm1_top = round(sm1_top_tmp);
 			pwm_set_wrap(sm1_slice_num, sm1_top);
-    		pwm_set_chan_level(sm1_slice_num, PWM_CHAN_A, floor(0.5*sm1_top));
-   			pwm_set_enabled(sm1_top, true); 
+			pwm_set_chan_level(sm1_slice_num, PWM_CHAN_A, sm1_top>>1);
+			pwm_set_enabled(sm1_slice_num, true);
 		}
 	}
-	
+
 	// init atXYZ Service in the fist running time
 	// atTMC2208.Run_Service();
 }
@@ -189,7 +217,21 @@ void App_TMC2208::App_TMC2208_Restart()
 void App_TMC2208::App_TMC2208_Execute()
 {
 	// atTMC2208.Run_Service();
-	// printf("Hello\n");
+	printf("Hello\n");
+	// if (sm1_speed > 0)
+	// {
+	// 	float sm1_top_tmp =  37500000/sm1_speed/sm1_resolution/sm1_div_int - 1;
+	// 	// uint16_t frequency = 3000;//Hz
+	// 	// uint16_t period = 125000000/32/frequency;
+	// 	printf("%f",sm1_top_tmp);
+	// 	if (sm1_top_tmp <= 65535)
+	// 	{
+	// 		int sm1_top = round(sm1_top_tmp);
+	// 		pwm_set_wrap(sm1_slice_num, sm1_top);
+	// 		pwm_set_chan_level(sm1_slice_num, PWM_CHAN_A, sm1_top>>1);
+	// 		pwm_set_enabled(sm1_slice_num, true);
+	// 	}
+	// }
 	if (atApp_TMC2208.User_Mode == APP_USER_MODE_DEBUG)
 	{
 	}
