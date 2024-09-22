@@ -217,7 +217,7 @@ void App_TMC2208::App_TMC2208_Restart()
 void App_TMC2208::App_TMC2208_Execute()
 {
 	// atTMC2208.Run_Service();
-	printf("Hello\n");
+	// printf("Hello\n");
 	// if (sm1_speed > 0)
 	// {
 	// 	float sm1_top_tmp =  37500000/sm1_speed/sm1_resolution/sm1_div_int - 1;
