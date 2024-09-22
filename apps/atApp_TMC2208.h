@@ -88,23 +88,18 @@ private:
 	static void SM1_RUN();
 	static void SM2_RUN();
 } atApp_TMC2208;
-/**
- * This function will be automaticaly called when a object is created by this class
- */
 
-
+SM1_State App_TMC2208::sm1_state = SM1_STOP;
 float App_TMC2208::sm1_speed = 0;
 unsigned char App_TMC2208::sm1_resolution = 16;
 float App_TMC2208::sm1_div = 8;
 float App_TMC2208::sm1_angle = 0;
 
+SM2_State App_TMC2208::sm2_state = SM2_STOP;
 float App_TMC2208::sm2_speed = 0;
 unsigned char App_TMC2208::sm2_resolution = 16;
 float App_TMC2208::sm2_div = 8;
 float App_TMC2208::sm2_angle = 0;
-
-SM1_State App_TMC2208::sm1_state = SM1_STOP;
-SM2_State App_TMC2208::sm2_state = SM2_STOP;
 
 App_TMC2208::App_TMC2208(/* args */)
 {
