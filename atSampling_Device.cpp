@@ -139,8 +139,10 @@ int main()
     // For more examples of clocks use see https://github.com/raspberrypi/pico-examples/tree/master/clocks
     atApp_TMC2208.Debug();
     while (true) {
+        atApp_TMC2208.sm2_state = SM2_RUN_FOREVER;
+        atApp_TMC2208.sm2_speed = 1;
         atApp_TMC2208.sm1_state = SM1_RUN_FOREVER;
-        atApp_TMC2208.sm1_speed = 15;
+        atApp_TMC2208.sm1_speed = 1;
         atApp_TMC2208.Run_Application(APP_RUN_MODE_AUTO);
         // watchdog_update();
         sleep_ms(1000);
