@@ -64,12 +64,12 @@ public:
 	~App_TMC2208();
 
 	static float sm1_speed;
-	static unsigned char sm1_resolution;
+	static uint8_t sm1_resolution;
 	static float sm1_div;
 	static float sm1_angle;
 
 	static float sm2_speed;
-	static unsigned char sm2_resolution;
+	static uint8_t sm2_resolution;
 	static float sm2_div;
 	static float sm2_angle;
 	
@@ -90,14 +90,14 @@ private:
 } atApp_TMC2208;
 
 SM1_State App_TMC2208::sm1_state = SM1_STOP;
+uint8_t App_TMC2208::sm1_resolution = 16;
 float App_TMC2208::sm1_speed = 0;
-unsigned char App_TMC2208::sm1_resolution = 16;
 float App_TMC2208::sm1_div = 8;
 float App_TMC2208::sm1_angle = 0;
 
 SM2_State App_TMC2208::sm2_state = SM2_STOP;
+uint8_t App_TMC2208::sm2_resolution = 16;
 float App_TMC2208::sm2_speed = 0;
-unsigned char App_TMC2208::sm2_resolution = 16;
 float App_TMC2208::sm2_div = 8;
 float App_TMC2208::sm2_angle = 0;
 
