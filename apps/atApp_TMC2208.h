@@ -45,7 +45,6 @@ enum SM2_State
 	SM2_RUN_ANGLE
 };
 
-
 /* _____GLOBAL VARIABLES_____________________________________________________ */
 // TaskHandle_t Task_atApp_TMC2208;
 void atApp_TMC2208_Task_Func(void *parameter);
@@ -65,14 +64,14 @@ public:
 
 	static float sm1_speed;
 	static uint8_t sm1_resolution;
-	static float sm1_div;
+	static bool sm1_dir;
 	static float sm1_angle;
 
 	static float sm2_speed;
 	static uint8_t sm2_resolution;
-	static float sm2_div;
+	static bool sm2_dir;
 	static float sm2_angle;
-	
+
 	static SM1_State sm1_state;
 	static SM2_State sm2_state;
 
@@ -92,13 +91,13 @@ private:
 SM1_State App_TMC2208::sm1_state = SM1_STOP;
 uint8_t App_TMC2208::sm1_resolution = 16;
 float App_TMC2208::sm1_speed = 0;
-float App_TMC2208::sm1_div = 8;
+bool App_TMC2208::sm1_dir = false;
 float App_TMC2208::sm1_angle = 0;
 
 SM2_State App_TMC2208::sm2_state = SM2_STOP;
 uint8_t App_TMC2208::sm2_resolution = 16;
 float App_TMC2208::sm2_speed = 0;
-float App_TMC2208::sm2_div = 8;
+bool App_TMC2208::sm2_dir = false;
 float App_TMC2208::sm2_angle = 0;
 
 App_TMC2208::App_TMC2208(/* args */)
@@ -126,72 +125,37 @@ App_TMC2208::~App_TMC2208()
 
 void App_TMC2208::SM1_RUN()
 {
-	switch (sm1_resolution)
+	int sm1_div = 1;
+	float sm1_top_tmp = 37500000 / sm1_speed / sm1_resolution / sm1_div - 1;
+	while (sm1_top_tmp > 65535)
 	{
-	case 2:
-		gpio_put(PIN_SM1_MS1, true);
-		gpio_put(PIN_SM1_MS2, false);
-		break;
-	case 4:
-		gpio_put(PIN_SM1_MS1, false);
-		gpio_put(PIN_SM1_MS2, true);
-		break;
-	case 8:
-		gpio_put(PIN_SM1_MS1, false);
-		gpio_put(PIN_SM1_MS2, false);
-		break;
-	case 16:
-		gpio_put(PIN_SM1_MS1, true);
-		gpio_put(PIN_SM1_MS2, true);
-		break;
-	default:;
+		sm1_div++;
+		sm1_top_tmp = 37500000 / sm1_speed / sm1_resolution / sm1_div - 1;
 	}
 	uint8_t sm1_slice_num = pwm_gpio_to_slice_num(PIN_SM1_STEP);
 	pwm_set_clkdiv(sm1_slice_num, sm1_div);
-	float sm1_top_tmp = 37500000 / fabs(sm1_speed) / sm1_resolution / sm1_div - 1;
-	if (sm1_top_tmp <= 65535)
-	{
-		int sm1_top = round(sm1_top_tmp);
-		pwm_set_wrap(sm1_slice_num, sm1_top);
-		pwm_set_chan_level(sm1_slice_num, PWM_CHAN_A, sm1_top >> 1);
-		pwm_set_enabled(sm1_slice_num, true);
-	}
+	int sm1_top = round(sm1_top_tmp);
+	pwm_set_wrap(sm1_slice_num, sm1_top);
+	pwm_set_chan_level(sm1_slice_num, PWM_CHAN_A, sm1_top >> 1);
+	pwm_set_enabled(sm1_slice_num, true);
 }
 
 void App_TMC2208::SM2_RUN()
 {
-	switch (sm2_resolution)
+	int sm2_div = 1;
+	float sm2_top_tmp = 37500000 / sm2_speed / sm2_resolution / sm2_div - 1;
+	while (sm2_top_tmp > 65535)
 	{
-	case 2:
-		gpio_put(PIN_SM2_MS1, true);
-		gpio_put(PIN_SM2_MS2, false);
-		break;
-	case 4:
-		gpio_put(PIN_SM2_MS1, false);
-		gpio_put(PIN_SM2_MS2, true);
-		break;
-	case 8:
-		gpio_put(PIN_SM2_MS1, false);
-		gpio_put(PIN_SM2_MS2, false);
-		break;
-	case 16:
-		gpio_put(PIN_SM2_MS1, true);
-		gpio_put(PIN_SM2_MS2, true);
-		break;
-	default:;
+		sm2_div++;
+		sm2_top_tmp = 37500000 / sm2_speed / sm2_resolution / sm2_div - 1;
 	}
 	uint8_t sm2_slice_num = pwm_gpio_to_slice_num(PIN_SM2_STEP);
 	pwm_set_clkdiv(sm2_slice_num, sm2_div);
-	float sm2_top_tmp = 37500000 / fabs(sm2_speed) / sm2_resolution / sm2_div - 1;
-	if (sm2_top_tmp <= 65535)
-	{
-		int sm2_top = round(sm2_top_tmp);
-		pwm_set_wrap(sm2_slice_num, sm2_top);
-		pwm_set_chan_level(sm2_slice_num, PWM_CHAN_B, sm2_top >> 1);
-		pwm_set_enabled(sm2_slice_num, true);
-	}
+	int sm2_top = round(sm2_top_tmp);
+	pwm_set_wrap(sm2_slice_num, sm2_top);
+	pwm_set_chan_level(sm2_slice_num, PWM_CHAN_B, sm2_top >> 1);
+	pwm_set_enabled(sm2_slice_num, true);
 }
-
 
 /**
  * Pend to start is the first task of this application it will do prerequisite condition. In the debit mode, task will send information of application to terminal to start the application.
@@ -246,23 +210,36 @@ void App_TMC2208::App_TMC2208_Execute()
 		break;
 	case SM1_RUN_FOREVER:
 		gpio_put(PIN_SM1_EN, false);
-		int tmp;
-		if (sm1_speed < 0)
+		gpio_put(PIN_SM1_DIR, sm1_dir);
+		if (sm1_speed > 300)
+			sm1_speed = 300;
+		switch (sm1_resolution)
 		{
-			tmp = -sm1_speed;
-			gpio_put(PIN_SM1_DIR, true);
-		}
-		else
-		{
-			tmp = sm1_speed;
-			gpio_put(PIN_SM1_DIR, false);
-		}
-		if ((tmp >= 40) && (tmp <= 250)) sm1_div = 1;
-		else
-		{
-			if ((tmp < 40) && (tmp >= 5)) sm1_div = 8;
-			else
-				if ((tmp < 5) && (tmp >= 0.15)) sm1_div = 250;
+		case 2:
+			gpio_put(PIN_SM1_MS1, true);
+			gpio_put(PIN_SM1_MS2, false);
+			if (sm1_speed < 1.13)
+				sm1_speed = 1.13;
+			break;
+		case 4:
+			gpio_put(PIN_SM1_MS1, false);
+			gpio_put(PIN_SM1_MS2, true);
+			if (sm1_speed < 0.57)
+				sm1_speed = 0.57;
+			break;
+		case 8:
+			gpio_put(PIN_SM1_MS1, false);
+			gpio_put(PIN_SM1_MS2, false);
+			if (sm1_speed < 0.29)
+				sm1_speed = 0.29;
+			break;
+		case 16:
+			gpio_put(PIN_SM1_MS1, true);
+			gpio_put(PIN_SM1_MS2, true);
+			if (sm1_speed < 0.15)
+				sm1_speed = 0.15;
+			break;
+		default:;
 		}
 		SM1_RUN();
 		break;
@@ -279,23 +256,36 @@ void App_TMC2208::App_TMC2208_Execute()
 		break;
 	case SM2_RUN_FOREVER:
 		gpio_put(PIN_SM2_EN, false);
-		int tmp;
-		if (sm2_speed < 0)
+		gpio_put(PIN_SM2_DIR, sm2_dir);
+		if (sm2_speed > 300)
+			sm2_speed = 300;
+		switch (sm2_resolution)
 		{
-			tmp = -sm2_speed;
-			gpio_put(PIN_SM2_DIR, true);
-		}
-		else
-		{
-			tmp = sm2_speed;
-			gpio_put(PIN_SM2_DIR, false);
-		}
-		if ((tmp >= 40) && (tmp <= 250)) sm2_div = 1;
-		else
-		{
-			if ((tmp < 40) && (tmp >= 5)) sm2_div = 8;
-			else
-				if ((tmp < 5) && (tmp >= 0.15)) sm2_div = 250;
+		case 2:
+			gpio_put(PIN_SM2_MS1, true);
+			gpio_put(PIN_SM2_MS2, false);
+			if (sm2_speed < 1.13)
+				sm2_speed = 1.13;
+			break;
+		case 4:
+			gpio_put(PIN_SM2_MS1, false);
+			gpio_put(PIN_SM2_MS2, true);
+			if (sm2_speed < 0.57)
+				sm2_speed = 0.57;
+			break;
+		case 8:
+			gpio_put(PIN_SM2_MS1, false);
+			gpio_put(PIN_SM2_MS2, false);
+			if (sm2_speed < 0.29)
+				sm2_speed = 0.29;
+			break;
+		case 16:
+			gpio_put(PIN_SM2_MS1, true);
+			gpio_put(PIN_SM2_MS2, true);
+			if (sm2_speed < 0.15)
+				sm2_speed = 0.15;
+			break;
+		default:;
 		}
 		SM2_RUN();
 		break;
