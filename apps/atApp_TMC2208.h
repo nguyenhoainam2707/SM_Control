@@ -44,6 +44,13 @@ enum SM2_State
 	SM2_RUN_FOREVER,
 	SM2_RUN_ANGLE
 };
+// enum SM1_Resolution
+// {
+// 	ONE_HALF = 2,
+// 	ONE_QUARTER = 4,
+// 	ONE_EIGHTH = 8,
+// 	ONE_SIXTEENTH = 16
+// };
 
 /* _____GLOBAL VARIABLES_____________________________________________________ */
 // TaskHandle_t Task_atApp_TMC2208;
@@ -220,28 +227,32 @@ void App_TMC2208::App_TMC2208_Execute()
 			gpio_put(PIN_SM1_MS2, false);
 			if (sm1_speed < 1.13)
 				sm1_speed = 1.13;
+			SM1_RUN();
 			break;
 		case 4:
 			gpio_put(PIN_SM1_MS1, false);
 			gpio_put(PIN_SM1_MS2, true);
 			if (sm1_speed < 0.57)
 				sm1_speed = 0.57;
+			SM1_RUN();
 			break;
 		case 8:
 			gpio_put(PIN_SM1_MS1, false);
 			gpio_put(PIN_SM1_MS2, false);
 			if (sm1_speed < 0.29)
 				sm1_speed = 0.29;
+			SM1_RUN();
 			break;
 		case 16:
 			gpio_put(PIN_SM1_MS1, true);
 			gpio_put(PIN_SM1_MS2, true);
 			if (sm1_speed < 0.15)
 				sm1_speed = 0.15;
+			SM1_RUN();
 			break;
-		default:;
+		default:
+			printf("sm1_resolution is an invalid value. Only 2, 4, 8 or 16 are allowed.\n");
 		}
-		SM1_RUN();
 		break;
 	case SM1_RUN_ANGLE:
 		gpio_put(PIN_SM1_EN, false);
@@ -266,28 +277,32 @@ void App_TMC2208::App_TMC2208_Execute()
 			gpio_put(PIN_SM2_MS2, false);
 			if (sm2_speed < 1.13)
 				sm2_speed = 1.13;
+			SM2_RUN();
 			break;
 		case 4:
 			gpio_put(PIN_SM2_MS1, false);
 			gpio_put(PIN_SM2_MS2, true);
 			if (sm2_speed < 0.57)
 				sm2_speed = 0.57;
+			SM2_RUN();
 			break;
 		case 8:
 			gpio_put(PIN_SM2_MS1, false);
 			gpio_put(PIN_SM2_MS2, false);
 			if (sm2_speed < 0.29)
 				sm2_speed = 0.29;
+			SM2_RUN();
 			break;
 		case 16:
 			gpio_put(PIN_SM2_MS1, true);
 			gpio_put(PIN_SM2_MS2, true);
 			if (sm2_speed < 0.15)
 				sm2_speed = 0.15;
+			SM2_RUN();
 			break;
-		default:;
+		default:
+			printf("sm2_resolution is an invalid value. Only 2, 4, 8 or 16 are allowed.\n");
 		}
-		SM2_RUN();
 		break;
 	case SM2_RUN_ANGLE:
 		gpio_put(PIN_SM2_EN, false);
