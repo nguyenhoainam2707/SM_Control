@@ -141,9 +141,10 @@ int main()
     while (true) {
         atApp_TMC2208.sm2_state = SM2_RUN_FOREVER;
         atApp_TMC2208.sm2_speed = 60;
-        atApp_TMC2208.sm1_state = SM1_RUN_FOREVER;
-        atApp_TMC2208.sm1_resolution = 1;
-        atApp_TMC2208.sm1_speed = 30;
+        atApp_TMC2208.sm1_state = SM1_RUN_ANGLE;
+        atApp_TMC2208.sm1_resolution = 8;
+        atApp_TMC2208.sm1_speed = 10;
+        atApp_TMC2208.sm1_angle = 60;
         atApp_TMC2208.Run_Application(APP_RUN_MODE_AUTO);
         // watchdog_update();
         sleep_ms(1000);
