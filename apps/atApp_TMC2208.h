@@ -17,6 +17,8 @@
 /* _____PROJECT INCLUDES____________________________________________________ */
 #include "App.h"
 #include "hardware/pwm.h"
+#include "hardware/irq.h"
+#include "pico/time.h"
 #include <cmath>
 // #include "services/TMC2208.h"
 /* _____DEFINITIONS__________________________________________________________ */
@@ -132,36 +134,134 @@ App_TMC2208::~App_TMC2208()
 
 void App_TMC2208::SM1_RUN()
 {
-	int sm1_div = 1;
-	float sm1_top_tmp = 37500000 / sm1_speed / sm1_resolution / sm1_div - 1;
-	while (sm1_top_tmp > 65535)
+	bool true_resolution = true;
+	gpio_put(PIN_SM1_DIR, sm1_dir);
+	if (sm1_speed > 300)
+		printf("sm1_speed must be less than or equal to 300 revolutions per minute.\n");
+	switch (sm1_resolution)
 	{
-		sm1_div++;
-		sm1_top_tmp = 37500000 / sm1_speed / sm1_resolution / sm1_div - 1;
+	case 2:
+		gpio_put(PIN_SM1_MS1, true);
+		gpio_put(PIN_SM1_MS2, false);
+		if (sm1_speed < 1.13)
+		{
+			sm1_speed = 0;
+			printf("When sm1_resolution = 2, sm1_speed must be greater than or equal to 1.13 revolutions per minute.\n");
+		}
+		break;
+	case 4:
+		gpio_put(PIN_SM1_MS1, false);
+		gpio_put(PIN_SM1_MS2, true);
+		if (sm1_speed < 0.57)
+		{
+			sm1_speed = 0;
+			printf("When sm1_resolution = 4, sm1_speed must be greater than or equal to 0.57 revolutions per minute.\n");
+		}
+		break;
+	case 8:
+		gpio_put(PIN_SM1_MS1, false);
+		gpio_put(PIN_SM1_MS2, false);
+		if (sm1_speed < 0.29)
+		{
+			sm1_speed = 0;
+			printf("When sm1_resolution = 8, sm1_speed must be greater than or equal to 0.29 revolutions per minute.\n");
+		}
+		break;
+	case 16:
+		gpio_put(PIN_SM1_MS1, true);
+		gpio_put(PIN_SM1_MS2, true);
+		if (sm1_speed < 0.15)
+		{
+			sm1_speed = 0;
+			printf("When sm1_resolution = 16, sm1_speed must be greater than or equal to 0.15 revolutions per minute.\n");
+		}
+		break;
+	default:
+		true_resolution = false;
+		printf("sm1_resolution is an invalid value. Only 2, 4, 8 or 16 are allowed.\n");
 	}
-	uint8_t sm1_slice_num = pwm_gpio_to_slice_num(PIN_SM1_STEP);
-	pwm_set_clkdiv(sm1_slice_num, sm1_div);
-	int sm1_top = round(sm1_top_tmp);
-	pwm_set_wrap(sm1_slice_num, sm1_top);
-	pwm_set_chan_level(sm1_slice_num, PWM_CHAN_A, sm1_top >> 1);
-	pwm_set_enabled(sm1_slice_num, true);
+	if (true_resolution)
+	{
+		int sm1_div = 1;
+		float sm1_top_tmp = 37500000 / sm1_speed / sm1_resolution / sm1_div - 1;
+		while (sm1_top_tmp > 65535)
+		{
+			sm1_div++;
+			sm1_top_tmp = 37500000 / sm1_speed / sm1_resolution / sm1_div - 1;
+		}
+		uint8_t sm1_slice_num = pwm_gpio_to_slice_num(PIN_SM1_STEP);
+		pwm_set_clkdiv(sm1_slice_num, sm1_div);
+		int sm1_top = round(sm1_top_tmp);
+		pwm_set_wrap(sm1_slice_num, sm1_top);
+		pwm_set_chan_level(sm1_slice_num, PWM_CHAN_A, sm1_top >> 1);
+		pwm_set_enabled(sm1_slice_num, true);
+	}
 }
 
 void App_TMC2208::SM2_RUN()
 {
-	int sm2_div = 1;
-	float sm2_top_tmp = 37500000 / sm2_speed / sm2_resolution / sm2_div - 1;
-	while (sm2_top_tmp > 65535)
+	bool true_resolution = true;
+	gpio_put(PIN_SM2_DIR, sm2_dir);
+	if (sm2_speed > 300)
+		printf("sm2_speed must be less than or equal to 300 revolutions per minute.\n");
+	switch (sm2_resolution)
 	{
-		sm2_div++;
-		sm2_top_tmp = 37500000 / sm2_speed / sm2_resolution / sm2_div - 1;
+	case 2:
+		gpio_put(PIN_SM2_MS1, true);
+		gpio_put(PIN_SM2_MS2, false);
+		if (sm2_speed < 1.13)
+		{
+			sm2_speed = 0;
+			printf("When sm2_resolution = 2, sm2_speed must be greater than or equal to 1.13 revolutions per minute.\n");
+		}
+		break;
+	case 4:
+		gpio_put(PIN_SM2_MS1, false);
+		gpio_put(PIN_SM2_MS2, true);
+		if (sm2_speed < 0.57)
+		{
+			sm2_speed = 0;
+			printf("When sm2_resolution = 4, sm2_speed must be greater than or equal to 0.57 revolutions per minute.\n");
+		}
+		break;
+	case 8:
+		gpio_put(PIN_SM2_MS1, false);
+		gpio_put(PIN_SM2_MS2, false);
+		if (sm2_speed < 0.29)
+		{
+			sm2_speed = 0;
+			printf("When sm2_resolution = 8, sm2_speed must be greater than or equal to 0.29 revolutions per minute.\n");
+		}
+		break;
+	case 16:
+		gpio_put(PIN_SM2_MS1, true);
+		gpio_put(PIN_SM2_MS2, true);
+		if (sm2_speed < 0.15)
+		{
+			sm2_speed = 0;
+			printf("When sm2_resolution = 16, sm2_speed must be greater than or equal to 0.15 revolutions per minute.\n");
+		}
+		break;
+	default:
+		true_resolution = false;
+		printf("sm2_resolution is an invalid value. Only 2, 4, 8 or 16 are allowed.\n");
 	}
-	uint8_t sm2_slice_num = pwm_gpio_to_slice_num(PIN_SM2_STEP);
-	pwm_set_clkdiv(sm2_slice_num, sm2_div);
-	int sm2_top = round(sm2_top_tmp);
-	pwm_set_wrap(sm2_slice_num, sm2_top);
-	pwm_set_chan_level(sm2_slice_num, PWM_CHAN_B, sm2_top >> 1);
-	pwm_set_enabled(sm2_slice_num, true);
+	if (true_resolution)
+	{
+		int sm2_div = 1;
+		float sm2_top_tmp = 37500000 / sm2_speed / sm2_resolution / sm2_div - 1;
+		while (sm2_top_tmp > 65535)
+		{
+			sm2_div++;
+			sm2_top_tmp = 37500000 / sm2_speed / sm2_resolution / sm2_div - 1;
+		}
+		uint8_t sm2_slice_num = pwm_gpio_to_slice_num(PIN_SM2_STEP);
+		pwm_set_clkdiv(sm2_slice_num, sm2_div);
+		int sm2_top = round(sm2_top_tmp);
+		pwm_set_wrap(sm2_slice_num, sm2_top);
+		pwm_set_chan_level(sm2_slice_num, PWM_CHAN_B, sm2_top >> 1);
+		pwm_set_enabled(sm2_slice_num, true);
+	}
 }
 
 /**
@@ -217,42 +317,7 @@ void App_TMC2208::App_TMC2208_Execute()
 		break;
 	case SM1_RUN_FOREVER:
 		gpio_put(PIN_SM1_EN, false);
-		gpio_put(PIN_SM1_DIR, sm1_dir);
-		if (sm1_speed > 300)
-			sm1_speed = 300;
-		switch (sm1_resolution)
-		{
-		case 2:
-			gpio_put(PIN_SM1_MS1, true);
-			gpio_put(PIN_SM1_MS2, false);
-			if (sm1_speed < 1.13)
-				sm1_speed = 1.13;
-			SM1_RUN();
-			break;
-		case 4:
-			gpio_put(PIN_SM1_MS1, false);
-			gpio_put(PIN_SM1_MS2, true);
-			if (sm1_speed < 0.57)
-				sm1_speed = 0.57;
-			SM1_RUN();
-			break;
-		case 8:
-			gpio_put(PIN_SM1_MS1, false);
-			gpio_put(PIN_SM1_MS2, false);
-			if (sm1_speed < 0.29)
-				sm1_speed = 0.29;
-			SM1_RUN();
-			break;
-		case 16:
-			gpio_put(PIN_SM1_MS1, true);
-			gpio_put(PIN_SM1_MS2, true);
-			if (sm1_speed < 0.15)
-				sm1_speed = 0.15;
-			SM1_RUN();
-			break;
-		default:
-			printf("sm1_resolution is an invalid value. Only 2, 4, 8 or 16 are allowed.\n");
-		}
+		SM1_RUN();
 		break;
 	case SM1_RUN_ANGLE:
 		gpio_put(PIN_SM1_EN, false);
@@ -267,42 +332,7 @@ void App_TMC2208::App_TMC2208_Execute()
 		break;
 	case SM2_RUN_FOREVER:
 		gpio_put(PIN_SM2_EN, false);
-		gpio_put(PIN_SM2_DIR, sm2_dir);
-		if (sm2_speed > 300)
-			sm2_speed = 300;
-		switch (sm2_resolution)
-		{
-		case 2:
-			gpio_put(PIN_SM2_MS1, true);
-			gpio_put(PIN_SM2_MS2, false);
-			if (sm2_speed < 1.13)
-				sm2_speed = 1.13;
-			SM2_RUN();
-			break;
-		case 4:
-			gpio_put(PIN_SM2_MS1, false);
-			gpio_put(PIN_SM2_MS2, true);
-			if (sm2_speed < 0.57)
-				sm2_speed = 0.57;
-			SM2_RUN();
-			break;
-		case 8:
-			gpio_put(PIN_SM2_MS1, false);
-			gpio_put(PIN_SM2_MS2, false);
-			if (sm2_speed < 0.29)
-				sm2_speed = 0.29;
-			SM2_RUN();
-			break;
-		case 16:
-			gpio_put(PIN_SM2_MS1, true);
-			gpio_put(PIN_SM2_MS2, true);
-			if (sm2_speed < 0.15)
-				sm2_speed = 0.15;
-			SM2_RUN();
-			break;
-		default:
-			printf("sm2_resolution is an invalid value. Only 2, 4, 8 or 16 are allowed.\n");
-		}
+		SM2_RUN();
 		break;
 	case SM2_RUN_ANGLE:
 		gpio_put(PIN_SM2_EN, false);

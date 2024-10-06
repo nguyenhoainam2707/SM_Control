@@ -8,7 +8,7 @@
 16	178	7475549459313362	CMakeFiles/atSampling_Device.dir/C_/Users/ADMIN/.pico-sdk/sdk/2.0.0/src/rp2_common/hardware_sync/sync.c.obj	6b3ddda3b5e3f7cb
 11	19	7475749862459418	C:/Users/ADMIN/Documents/GitHub/atSampling_Device/build/blink.pio.h	1e383bed03d3ac69
 98	133	7475539418470299	C:/Users/ADMIN/Documents/GitHub/atSampling_Device/build/pico-sdk/src/rp2040/boot_stage2/bs2_default_padded_checksummed.S	68f3833f6a930df8
-256	4220	7493732789197326	CMakeFiles/atSampling_Device.dir/atSampling_Device.cpp.obj	360226dc1afd4bee
+57	998	7498958113347362	CMakeFiles/atSampling_Device.dir/atSampling_Device.cpp.obj	360226dc1afd4bee
 79	482	7485065429915878	pico-sdk/src/rp2040/boot_stage2/CMakeFiles/bs2_default.dir/compile_time_choice.S.obj	5c39a2f44597bc50
 9365	11606	7485072866824568	CMakeFiles/atSampling_Device.dir/C_/Users/a_c_e_r/.pico-sdk/sdk/2.0.0/lib/tinyusb/src/device/usbd_control.c.obj	649f04eb4d3faa86
 1440	1568	7485065444645692	pico-sdk/src/rp2040/boot_stage2/bs2_default.bin	18bfa32af4eed54d
@@ -104,8 +104,8 @@
 461	630	7475549463762429	CMakeFiles/atSampling_Device.dir/C_/Users/ADMIN/.pico-sdk/sdk/2.0.0/src/rp2_common/hardware_pio/pio.c.obj	b28b6d4521456ea8
 389	607	7475549463037393	CMakeFiles/atSampling_Device.dir/C_/Users/ADMIN/.pico-sdk/sdk/2.0.0/lib/tinyusb/src/tusb.c.obj	6a5f20567701386b
 267	650	7475549461821890	CMakeFiles/atSampling_Device.dir/C_/Users/ADMIN/.pico-sdk/sdk/2.0.0/lib/tinyusb/src/device/usbd.c.obj	80430010993a0caf
-4221	7430	7493732828810291	atSampling_Device.elf	925cbb3e642ba0b6
-31	898	7493795937329220	build.ninja	e820c8dde82d38cb
+999	3215	7498958122745524	atSampling_Device.elf	925cbb3e642ba0b6
+31	898	7499096754601793	build.ninja	e820c8dde82d38cb
 917	1045	7475758356515364	C:/Pico/atSampling_Device/atSampling_Device/build/pico-sdk/src/rp2040/boot_stage2/bs2_default.bin	bf5ea4f3e9714092
 1047	1221	7475758358240988	C:/Pico/atSampling_Device/atSampling_Device/build/pico-sdk/src/rp2040/boot_stage2/bs2_default_padded_checksummed.S	225078419094c21d
 411	2283	7485072777271305	CMakeFiles/atSampling_Device.dir/C_/Users/a_c_e_r/.pico-sdk/sdk/2.0.0/src/rp2_common/hardware_irq/irq_handler_chain.S.obj	7ce362060916afde
@@ -177,9 +177,3 @@
 9529	12543	7485072868482612	CMakeFiles/atSampling_Device.dir/C_/Users/a_c_e_r/.pico-sdk/sdk/2.0.0/lib/tinyusb/src/class/cdc/cdc_device.c.obj	11efb5c0c2645065
 12090	13711	7485072894080316	CMakeFiles/atSampling_Device.dir/C_/Users/a_c_e_r/.pico-sdk/sdk/2.0.0/src/rp2_common/pico_fix/rp2040_usb_device_enumeration/rp2040_usb_device_enumeration.c.obj	94b542a6462cf143
 11929	14170	7485072893396174	CMakeFiles/atSampling_Device.dir/C_/Users/a_c_e_r/.pico-sdk/sdk/2.0.0/lib/tinyusb/src/common/tusb_fifo.c.obj	6120e5ccb0bb1411
-33	1871	7493798812864783	CMakeFiles/atSampling_Device.dir/atSampling_Device.cpp.obj	360226dc1afd4bee
-1878	3672	7493798831312190	atSampling_Device.elf	925cbb3e642ba0b6
-54	1580	7493819032736231	CMakeFiles/atSampling_Device.dir/atSampling_Device.cpp.obj	360226dc1afd4bee
-1581	3548	7493819047992674	atSampling_Device.elf	925cbb3e642ba0b6
-39	602	7493819565807302	CMakeFiles/atSampling_Device.dir/atSampling_Device.cpp.obj	360226dc1afd4bee
-602	1251	7493819571441183	atSampling_Device.elf	925cbb3e642ba0b6
