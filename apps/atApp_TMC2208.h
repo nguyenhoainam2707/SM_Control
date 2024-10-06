@@ -189,7 +189,10 @@ void App_TMC2208::SM1_RUN()
 	bool true_resolution = true;
 	gpio_put(PIN_SM1_DIR, sm1_dir);
 	if (sm1_speed > 300)
+	{
+		sm1_speed = 0;
 		printf("sm1_speed must be less than or equal to 300 revolutions per minute.\n");
+	}
 	switch (sm1_resolution)
 	{
 	case 2:
@@ -263,7 +266,10 @@ void App_TMC2208::SM2_RUN()
 	bool true_resolution = true;
 	gpio_put(PIN_SM2_DIR, sm2_dir);
 	if (sm2_speed > 300)
+	{
+		sm2_speed = 0;
 		printf("sm2_speed must be less than or equal to 300 revolutions per minute.\n");
+	}
 	switch (sm2_resolution)
 	{
 	case 2:
