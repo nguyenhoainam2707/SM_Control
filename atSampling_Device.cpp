@@ -31,7 +31,6 @@
 // Example uses GPIO 2
 #define GPIO 2
 
-
 // I2C defines
 // This example will use I2C0 on GPIO8 (SDA) and GPIO9 (SCL) running at 400KHz.
 // Pins can be changed, see the GPIO function select table in the datasheet for information on GPIO assignments
@@ -41,7 +40,8 @@
 
 #include "blink.pio.h"
 
-void blink_pin_forever(PIO pio, uint sm, uint offset, uint pin, uint freq) {
+void blink_pin_forever(PIO pio, uint sm, uint offset, uint pin, uint freq)
+{
     blink_program_init(pio, sm, offset, pin);
     pio_sm_set_enabled(pio, sm, true);
 
@@ -52,14 +52,11 @@ void blink_pin_forever(PIO pio, uint sm, uint offset, uint pin, uint freq) {
     pio->txf[sm] = (125000000 / (2 * freq)) - 3;
 }
 
-int64_t alarm_callback(alarm_id_t id, void *user_data) {
+int64_t alarm_callback(alarm_id_t id, void *user_data)
+{
     // Put your timeout handler code in here
     return 0;
 }
-
-
-
-
 
 int main()
 {
@@ -80,7 +77,7 @@ int main()
     gpio_pull_up(GPIO);
     // See https://github.com/raspberrypi/pico-examples/tree/master/gpio for other gpio examples, including using interrupts
 
-    // Example of using the HW divider. The pico_divider library provides a more user friendly set of APIs 
+    // Example of using the HW divider. The pico_divider library provides a more user friendly set of APIs
     // over the divider (and support for 64 bit divides), and of course by default regular C language integer
     // divisions are redirected thru that library, meaning you can just use C level `/` and `%` operators and
     // gain the benefits of the fast hardware divider.
@@ -97,8 +94,8 @@ int main()
     // See https://github.com/raspberrypi/pico-examples/tree/master/divider for more complex use
 
     // I2C Initialisation. Using it at 400Khz.
-    i2c_init(I2C_PORT, 400*1000);
-    
+    i2c_init(I2C_PORT, 400 * 1000);
+
     gpio_set_function(I2C_SDA, GPIO_FUNC_I2C);
     gpio_set_function(I2C_SCL, GPIO_FUNC_I2C);
     gpio_pull_up(I2C_SDA);
@@ -109,12 +106,12 @@ int main()
     PIO pio = pio0;
     uint offset = pio_add_program(pio, &blink_program);
     printf("Loaded program at %d\n", offset);
-    
-    #ifdef PICO_DEFAULT_LED_PIN
+
+#ifdef PICO_DEFAULT_LED_PIN
     blink_pin_forever(pio, 0, offset, PICO_DEFAULT_LED_PIN, 1);
-    #else
+#else
     blink_pin_forever(pio, 0, offset, 6, 3);
-    #endif
+#endif
     // For more pio examples see https://github.com/raspberrypi/pico-examples/tree/master/pio
 
     // Timer example code - This example fires off the callback after 2000ms
@@ -122,15 +119,16 @@ int main()
     // For more examples of timer use see https://github.com/raspberrypi/pico-examples/tree/master/timer
 
     // Watchdog example code
-    if (watchdog_caused_reboot()) {
+    if (watchdog_caused_reboot())
+    {
         printf("Rebooted by Watchdog!\n");
         // Whatever action you may take if a watchdog caused a reboot
     }
-    
+
     // Enable the watchdog, requiring the watchdog to be updated every 100ms or the chip will reboot
     // second arg is pause on debug which means the watchdog will pause when stepping through code
     // watchdog_enable(2000, 1);
-    
+
     // You need to call this function at least more often than the 100ms in the enable call to prevent a reboot
     // watchdog_update();
 
@@ -138,15 +136,15 @@ int main()
     // printf("USB Clock Frequency is %d Hz\n", clock_get_hz(clk_usb));
     // For more examples of clocks use see https://github.com/raspberrypi/pico-examples/tree/master/clocks
     atApp_TMC2208.Debug();
-    while (true) {
-        atApp_TMC2208.sm2_state = SM2_RUN_FOREVER;
-        atApp_TMC2208.sm2_speed = 60;
-        atApp_TMC2208.sm1_state = SM1_RUN_ANGLE;
-        atApp_TMC2208.sm1_resolution = 8;
-        atApp_TMC2208.sm1_speed = 10;
-        atApp_TMC2208.sm1_angle = 60;
+    atApp_TMC2208.sm2_state = SM2_RUN_FOREVER;
+    atApp_TMC2208.sm2_speed = 60;
+    atApp_TMC2208.sm1_state = SM1_RUN_ANGLE;
+    atApp_TMC2208.sm1_resolution = 8;
+    atApp_TMC2208.sm1_speed = 10;
+    atApp_TMC2208.sm1_angle = 60;
+    while (true)
+    {
         atApp_TMC2208.Run_Application(APP_RUN_MODE_AUTO);
-        // watchdog_update();
         sleep_ms(1000);
     }
 }

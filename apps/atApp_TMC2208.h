@@ -86,6 +86,8 @@ public:
 
 protected:
 private:
+	// static bool sm1_irq;
+	// static bool sm2_irq;
 	static void App_TMC2208_Pend();
 	static void App_TMC2208_Start();
 	static void App_TMC2208_Restart();
@@ -99,6 +101,8 @@ private:
 	static void SM2_count_msteps();
 } atApp_TMC2208;
 
+bool sm1_irq = false;
+bool sm2_irq = false;
 SM1_State App_TMC2208::sm1_state = SM1_STOP;
 uint8_t App_TMC2208::sm1_resolution = 16;
 float App_TMC2208::sm1_speed = 0;
@@ -146,13 +150,22 @@ void App_TMC2208::SM1_count_msteps()
 	if (sm1_count == sm1_num_pulses)
 	{
 		pwm_set_enabled(sm1_slice_num, false);
-		gpio_put(PIN_SM1_EN, true);
 		printf("Done\n");
+		sm1_count = 0;
+		sm1_state = SM1_STOP;
 		irq_set_enabled(PWM_DEFAULT_IRQ_NUM(), false);
 	}
 }
 void App_TMC2208::SM1_RUN()
 {
+	if (sm1_irq)
+	{
+		uint8_t sm1_slice_num = pwm_gpio_to_slice_num(PIN_SM1_STEP);
+		pwm_clear_irq(sm1_slice_num);
+		pwm_set_irq_enabled(sm1_slice_num, true);
+		irq_set_exclusive_handler(PWM_DEFAULT_IRQ_NUM(), SM1_count_msteps);
+		irq_set_enabled(PWM_DEFAULT_IRQ_NUM(), true);
+	}
 	bool true_resolution = true;
 	gpio_put(PIN_SM1_DIR, sm1_dir);
 	if (sm1_speed > 300)
@@ -336,17 +349,12 @@ void App_TMC2208::App_TMC2208_Execute()
 		break;
 	case SM1_RUN_FOREVER:
 		gpio_put(PIN_SM1_EN, false);
+		sm1_irq = false;
 		SM1_RUN();
 		break;
 	case SM1_RUN_ANGLE:
 		gpio_put(PIN_SM1_EN, false);
-
-		uint8_t sm1_slice_num = pwm_gpio_to_slice_num(PIN_SM1_STEP);
-		pwm_clear_irq(sm1_slice_num);
-		pwm_set_irq_enabled(sm1_slice_num, true);
-		irq_set_exclusive_handler(PWM_DEFAULT_IRQ_NUM(), SM1_count_msteps);
-		irq_set_enabled(PWM_DEFAULT_IRQ_NUM(), true);
-
+		sm1_irq = true;
 		SM1_RUN();
 		break;
 	default:;
@@ -363,7 +371,6 @@ void App_TMC2208::App_TMC2208_Execute()
 		break;
 	case SM2_RUN_ANGLE:
 		gpio_put(PIN_SM2_EN, false);
-
 		break;
 	default:;
 	}
