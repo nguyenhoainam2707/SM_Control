@@ -136,14 +136,15 @@ int main()
     // printf("USB Clock Frequency is %d Hz\n", clock_get_hz(clk_usb));
     // For more examples of clocks use see https://github.com/raspberrypi/pico-examples/tree/master/clocks
     atApp_TMC2208.Debug();
-    atApp_TMC2208.sm2_state = SM2_RUN_ANGLE;
+    atApp_TMC2208.sm2_state = SM2_STOP;
     atApp_TMC2208.sm2_resolution = 8;
     atApp_TMC2208.sm2_speed = 10;
     atApp_TMC2208.sm2_angle = 700;
-    atApp_TMC2208.sm1_state = SM1_RUN_FOREVER;
-    atApp_TMC2208.sm1_resolution = 8;
-    atApp_TMC2208.sm1_speed = 10;
-    atApp_TMC2208.sm1_angle = 500;
+    atApp_TMC2208.sm1_state = SM1_RUN_ANGLE;
+    atApp_TMC2208.sm1_resolution = 16;
+    atApp_TMC2208.sm1_dir = true;
+    atApp_TMC2208.sm1_speed = 30;
+    atApp_TMC2208.sm1_angle = 360*3;
     while (true)
     {
         atApp_TMC2208.Run_Application(APP_RUN_MODE_AUTO);

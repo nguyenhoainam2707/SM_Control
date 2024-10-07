@@ -148,7 +148,7 @@ void App_TMC2208::SM1_count_msteps()
 	sm1_count++;
 	printf("sm1_count = %llu\n", sm1_count);
 
-	if (sm1_count == sm1_num_pulses)
+	if (sm1_count >= sm1_num_pulses)
 	{
 		pwm_set_enabled(sm1_slice_num, false);
 		printf("Done\n");
@@ -167,7 +167,7 @@ void App_TMC2208::SM2_count_msteps()
 	sm2_count++;
 	printf("sm2_count = %llu\n", sm2_count);
 
-	if (sm2_count == sm2_num_pulses)
+	if (sm2_count >= sm2_num_pulses)
 	{
 		pwm_set_enabled(sm2_slice_num, false);
 		printf("Done\n");
@@ -187,6 +187,7 @@ void App_TMC2208::SM1_RUN()
 		irq_set_enabled(PWM_DEFAULT_IRQ_NUM(), true);
 	}
 	bool true_resolution = true;
+	gpio_put(PIN_SM1_EN, false);
 	gpio_put(PIN_SM1_DIR, sm1_dir);
 	if (sm1_speed > 300)
 	{
@@ -264,6 +265,7 @@ void App_TMC2208::SM2_RUN()
 		irq_set_enabled(PWM_DEFAULT_IRQ_NUM(), true);
 	}
 	bool true_resolution = true;
+	gpio_put(PIN_SM2_EN, false);
 	gpio_put(PIN_SM2_DIR, sm2_dir);
 	if (sm2_speed > 300)
 	{
@@ -364,6 +366,9 @@ void App_TMC2208::App_TMC2208_Start()
 	gpio_set_dir(PIN_SM2_DIR, GPIO_OUT);
 	gpio_set_dir(PIN_SM2_MS1, GPIO_OUT);
 	gpio_set_dir(PIN_SM2_MS2, GPIO_OUT);
+
+	gpio_put(PIN_SM1_EN, true);
+	gpio_put(PIN_SM2_EN, true);
 }
 /**
  * Restart function of SNM  app
@@ -382,14 +387,17 @@ void App_TMC2208::App_TMC2208_Execute()
 		gpio_put(PIN_SM1_EN, true);
 		break;
 	case SM1_RUN_FOREVER:
-		gpio_put(PIN_SM1_EN, false);
 		sm1_irq = false;
 		SM1_RUN();
 		break;
 	case SM1_RUN_ANGLE:
-		gpio_put(PIN_SM1_EN, false);
-		sm1_irq = true;
-		SM1_RUN();
+		if (sm1_angle <= 0)
+			printf("sm1_angle must be greater than 0.\n");
+		else
+		{
+			sm1_irq = true;
+			SM1_RUN();
+		}
 		break;
 	default:;
 	}
@@ -400,14 +408,17 @@ void App_TMC2208::App_TMC2208_Execute()
 		gpio_put(PIN_SM2_EN, true);
 		break;
 	case SM2_RUN_FOREVER:
-		gpio_put(PIN_SM2_EN, false);
 		sm2_irq = false;
 		SM2_RUN();
 		break;
 	case SM2_RUN_ANGLE:
-		gpio_put(PIN_SM2_EN, false);
-		sm2_irq = true;
-		SM2_RUN();
+		if (sm2_angle <= 0)
+			printf("sm2_angle must be greater than 0.\n");
+		else
+		{
+			sm2_irq = true;
+			SM2_RUN();
+		}
 		break;
 	default:;
 	}
