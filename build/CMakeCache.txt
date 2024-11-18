@@ -319,7 +319,7 @@ PICO_STDIO_UART:BOOL=ON
 PICO_STDIO_USB:BOOL=OFF
 
 //No help, variable specified on the command line.
-Python3_EXECUTABLE:UNINITIALIZED=C:/Users/a c e r/.pico-sdk/python/3.12.1/python.exe
+Python3_EXECUTABLE:UNINITIALIZED=c:/Users/a c e r/AppData/Local/Programs/Python/Python313/python.exe
 
 //Value Computed by CMake
 atSampling_Device_BINARY_DIR:STATIC=D:/Github/SM_Control/build
@@ -508,7 +508,7 @@ DOXYGEN_DOT_EXECUTABLE-ADVANCED:INTERNAL=1
 DOXYGEN_EXECUTABLE-ADVANCED:INTERNAL=1
 FAMILY_MCUS:INTERNAL=RP2040
 //Details about finding Python3
-FIND_PACKAGE_MESSAGE_DETAILS_Python3:INTERNAL=[C:/Users/a c e r/.pico-sdk/python/3.12.1/python.exe][cfound components: Interpreter ][v3.12.1()]
+FIND_PACKAGE_MESSAGE_DETAILS_Python3:INTERNAL=[c:/Users/a c e r/AppData/Local/Programs/Python/Python313/python.exe][cfound components: Interpreter ][v3.13.0()]
 PICO_ARM:INTERNAL=1
 PICO_BOOT_STAGE2_DIR:INTERNAL=C:/Users/a c e r/.pico-sdk/sdk/2.0.0/src/rp2040/boot_stage2
 PICO_CMAKE_PRELOAD_PLATFORM_DIR:INTERNAL=C:/Users/a c e r/.pico-sdk/sdk/2.0.0/cmake/preload/platforms
@@ -536,10 +536,10 @@ PICO_TOOLS_DIR:INTERNAL=C:/Users/a c e r/.pico-sdk/sdk/2.0.0/tools
 _Python3_Compiler_REASON_FAILURE:INTERNAL=
 //Development reason failure
 _Python3_Development_REASON_FAILURE:INTERNAL=
-_Python3_EXECUTABLE:INTERNAL=C:/Users/a c e r/.pico-sdk/python/3.12.1/python.exe
+_Python3_EXECUTABLE:INTERNAL=c:/Users/a c e r/AppData/Local/Programs/Python/Python313/python.exe
 //Python3 Properties
-_Python3_INTERPRETER_PROPERTIES:INTERNAL=Python;3;12;1;32;64;;;abi3;C:\Users\a c e r\.pico-sdk\python\3.12.1\Lib;C:\Users\a c e r\.pico-sdk\python\3.12.1\Lib;C:\Users\a c e r\.pico-sdk\python\3.12.1\Lib\site-packages;C:\Users\a c e r\.pico-sdk\python\3.12.1\Lib\site-packages
-_Python3_INTERPRETER_SIGNATURE:INTERNAL=fa5333b46a372e716bdf790d686bb389
+_Python3_INTERPRETER_PROPERTIES:INTERNAL=Python;3;13;0;32;64;;;abi3;c:\Users\a c e r\AppData\Local\Programs\Python\Python313\Lib;c:\Users\a c e r\AppData\Local\Programs\Python\Python313\Lib;c:\Users\a c e r\AppData\Local\Programs\Python\Python313\Lib\site-packages;c:\Users\a c e r\AppData\Local\Programs\Python\Python313\Lib\site-packages
+_Python3_INTERPRETER_SIGNATURE:INTERNAL=84904916758308dd78de5933026558cb
 //NumPy reason failure
 _Python3_NumPy_REASON_FAILURE:INTERNAL=
 
