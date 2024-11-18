@@ -4,7 +4,6 @@
 */
 /*
   Application example t
-
   Library::
 
   This version is
